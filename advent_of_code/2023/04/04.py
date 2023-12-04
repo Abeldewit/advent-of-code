@@ -44,7 +44,9 @@ def get_copied_count(lines: List[str]) -> int:
             re.findall(r'\d+', numbers.split('|')[1])
         )
         num_matches = len(winning_numbers.intersection(my_numbers))
-        copy_counter[card_num+1:card_num+num_matches+1] += 1 * copy_counter[card_num]
+        copy_counter[card_num+1:card_num+num_matches+1] += (
+            1 * copy_counter[card_num]
+        )
     return int(sum(copy_counter))
 
 

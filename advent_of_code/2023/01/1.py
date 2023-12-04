@@ -1,17 +1,8 @@
-from pathlib import Path
 import string
-import numpy as np
+from typing import List
 
-puzzle_input = Path(__file__).parent.joinpath('puzzle_input.txt')
-with open(puzzle_input, 'r') as f:
-    lines = [line.strip() for line in f.readlines()]
-
-
-nummap = [
-    'one', 'two', 'three',
-    'four', 'five', 'six',
-    'seven', 'eight', 'nine',
-]
+from advent_of_code.decorators import aoc_output
+from advent_of_code.utilities import get_puzzle_input
 
 
 def find_indexes(string_to_search: str, search_terms: list) -> int:
@@ -28,22 +19,47 @@ def find_indexes(string_to_search: str, search_terms: list) -> int:
     return indexes
 
 
-def find_first_last(line: str, digit_only=True):
-    digit_idx = find_indexes(line, list(string.digits))
-    num_idx = find_indexes(line, nummap) if not digit_only else []
+@aoc_output(title="Day 1 - Calibration Values")
+def get_calibration_values(lines: List[str]) -> int:
+    running_sum = 0
+    for line in lines:
+        digit_idx = find_indexes(line, list(string.digits))
 
-    indexes = sorted(digit_idx + num_idx, key=lambda x: x[0])
-    first_num = indexes[0][1]
-    last_num = indexes[-1][1]
-
-    first_num = first_num if len(first_num) == 1 else nummap.index(first_num) + 1
-    last_num = last_num if len(last_num) == 1 else nummap.index(last_num) + 1
-
-    return int(f"{first_num}{last_num}")
+        indexes = sorted(digit_idx, key=lambda x: x[0])
+        first_num = indexes[0][1]
+        last_num = indexes[-1][1]
+        running_sum += int(f"{first_num}{last_num}")
+    return running_sum
 
 
-part_1 = [find_first_last(l) for l in lines]
-part_2 = [find_first_last(l, digit_only=False) for l in lines]
+@aoc_output(title="Day 1 - Spelled calibration")
+def get_spelled_numbers(lines: List[str]) -> int:
+    nummap = ['one', 'two', 'three', 'four', 'five',
+              'six', 'seven', 'eight', 'nine']
+    running_sum = 0
+    for line in lines:
+        digit_idx = find_indexes(line, list(string.digits))
+        num_idx = find_indexes(line, nummap)
 
-print(f"Part 1: {sum(part_1)}")
-print(f"Part 2: {sum(part_2)}")
+        indexes = sorted(digit_idx + num_idx, key=lambda x: x[0])
+        first_num = indexes[0][1]
+        last_num = indexes[-1][1]
+
+        first_num = (
+            first_num 
+            if len(first_num) == 1 
+            else nummap.index(first_num) + 1
+        )
+        last_num = (
+            last_num 
+            if len(last_num) == 1 
+            else nummap.index(last_num) + 1
+        )
+        running_sum += int(f"{first_num}{last_num}")
+    return running_sum
+
+
+if __name__ == "__main__":
+    pi = get_puzzle_input(__file__)
+    get_calibration_values(pi)
+    get_spelled_numbers(pi)

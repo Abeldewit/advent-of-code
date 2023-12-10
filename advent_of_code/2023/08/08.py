@@ -1,19 +1,11 @@
 from advent_of_code.decorators import aoc_output
-from advent_of_code.utilities import get_puzzle_input
+from advent_of_code.utilities import get_puzzle_input, submit_solution
 
 from typing import Callable, Dict, Iterable, List, Tuple
 import re
+from itertools import cycle
 import numpy as np
 import math
-
-
-def _instr_gen(instructions):
-    idx = -1
-    while True:
-        if idx == len(instructions)-1:
-            idx = -1
-        idx += 1
-        yield instructions[idx]
 
 
 def find_node_steps(
@@ -21,7 +13,7 @@ def find_node_steps(
     instructions: Iterable[int], end_condition: Callable
 ):
     current_node = start_node
-    instruct = _instr_gen(instructions)
+    instruct = cycle(instructions)
     step_counter = 0
     while end_condition(current_node):
         left_or_right = next(instruct)
@@ -74,14 +66,15 @@ def find_ghost_nodes(lines: List[str]) -> int:
 
     step_per_node = [
         find_node_steps(
-            start_node=node, 
+            start_node=node,
             node_dict=node_dict,
             instructions=binary_instr,
             end_condition=lambda x: not x.endswith('Z')
         )
         for node in start_nodes
     ]
-
+    gcd = math.gcd(*step_per_node)
+    primes = [node / gcd for node in step_per_node]
     return math.lcm(*step_per_node)
 
 
@@ -90,6 +83,9 @@ if __name__ == "__main__":
 
     # Part 1
     solution_1 = find_single_node_steps(pi)
+    submit_solution(__file__, solution_1, part='a')
 
     # Part 2
     solution_2 = find_ghost_nodes(pi)
+    submit_solution(__file__, solution_2, part='b')
+

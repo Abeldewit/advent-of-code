@@ -28,13 +28,14 @@ def camel_card_winnings(lines: List[str], use_jokers: bool = False) -> int:
         (line.split()[0], int(line.split()[1])) 
         for line in lines
     ]
-    
+
     def _hand_type(game_hand):
         c = Counter(game_hand)
         counts = sorted(list(c.values()), reverse=True)
-        
+
         if use_jokers:
-            if game_hand == 'JJJJJ': return 6
+            if game_hand == 'JJJJJ':
+                return 6
             elif 'J' in c:
                 best_card = [v for v in c.most_common() if v[0] != 'J'][0]
                 c.update({
@@ -49,7 +50,7 @@ def camel_card_winnings(lines: List[str], use_jokers: bool = False) -> int:
         x[2],  # Sort on type
         *((len(cards)+1)-cards.index(v) for v in x[0])  # And break ties based on card index
     ))
-    
+
     return np.sum(np.array(sorted_hands)[:, 1].astype(int) * np.mgrid[1:len(sorted_hands)+1])
 
 if __name__ == "__main__":
@@ -61,4 +62,3 @@ if __name__ == "__main__":
     solution_2 = aoc_output(title="Day 7 - Camel Jokers")(
         lambda x: camel_card_winnings(x, use_jokers=True)
     )(pi)
-

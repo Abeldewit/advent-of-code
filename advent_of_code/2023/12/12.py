@@ -51,7 +51,7 @@ def solve_line(line, remaining_numbers):
     raise Exception("None of the options have been reached!")
 
 
-@aoc_output(title="Day - ")
+@aoc_output(title="Day 12 - Broken Springs")
 def part_1(lines: List[Tuple[str]]) -> int:
     return sum([
         solve_line(line[0], line[1])
@@ -59,7 +59,7 @@ def part_1(lines: List[Tuple[str]]) -> int:
     ])
 
 
-@aoc_output(title="Day - ")
+@aoc_output(title="Day 12 - Folded springs")
 def part_2(lines: List[str]) -> int:
     return sum([
         solve_line(

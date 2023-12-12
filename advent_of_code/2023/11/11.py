@@ -58,7 +58,7 @@ def get_distance(grid, star1, star2, star_dist):
     return x_dist + y_dist
 
 
-@aoc_output(title="Day - ")
+@aoc_output(title="Day 11 - Galaxy Map")
 def part_1(lines: List[str]) -> int:
     galaxy_map = np.array([[char for char in line] for line in lines])
     exp_map = expand_galaxy(galaxy_map)
@@ -76,7 +76,7 @@ def part_1(lines: List[str]) -> int:
     return result_sum
 
 
-@aoc_output(title="Day - ")
+@aoc_output(title="Day 11 - Large Galaxy")
 def part_2(lines: List[str]) -> int:
     galaxy_map = np.array([[char for char in line] for line in lines])
     exp_map = expand_galaxy(galaxy_map)

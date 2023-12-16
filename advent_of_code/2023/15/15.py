@@ -17,13 +17,7 @@ def string_hasher(string: str) -> int:
 
 @aoc_output(title="Day 15 - ASCII Hash")
 def part_1(lines: List[str]) -> int:
-    strs = lines.split(',')
-    total_hashes = []
-    for s in strs:
-        total_hashes.append(
-            string_hasher(s)
-        )
-    return sum(total_hashes)
+    return sum(map(string_hasher, lines.split(',')))
 
 
 @aoc_output(title="Day 15 - Focal strength")

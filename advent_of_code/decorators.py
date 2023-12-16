@@ -14,6 +14,13 @@ def aoc_output(title: str):
             start_time = perf_counter()
             result = func(*args, **kwargs)
             elapsed_time = perf_counter() - start_time
+            
+            if elapsed_time < 1e-2:
+                time_col = (f"Time: {elapsed_time/1e-3:.3f} milliseconds",)
+            elif elapsed_time > 60:
+                time_col = (f"Time: {elapsed_time/60:.3f} minutes",)
+            else:
+                time_col = (f"Time: {elapsed_time:.3f} seconds",)
 
             table = PrettyTable(
                 title=title, encoding='utf-8', 
@@ -22,7 +29,7 @@ def aoc_output(title: str):
             table.set_style(SINGLE_BORDER)
             table.add_rows([
                 (f"Answer: {result}",),
-                (f"Time: {elapsed_time:.6f} seconds",)
+                time_col
             ])
             print(table)
 

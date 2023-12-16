@@ -1,12 +1,11 @@
 from advent_of_code.decorators import aoc_output
-from advent_of_code.utilities import get_puzzle_input, submit_solution
+from advent_of_code.utilities import get_puzzle_input
 
-from typing import List
-from functools import lru_cache
-from collections import deque
+from typing import List, Tuple
 import multiprocessing
-from tqdm import tqdm
-import os
+import sys
+sys.setrecursionlimit(10000)
+
 
 directions = {
     'N': (-1, 0),
@@ -16,14 +15,12 @@ directions = {
 }
 
 
-@lru_cache(maxsize=None)
 def make_next_pos(pos, direction: str):
     d = directions[direction]
     return (pos[0]+d[0], pos[1]+d[1])
 
 
 def print_grid_pos(lines, pos):
-    os.system('clear')
     for y in range(len(lines)):
         for x in range(len(lines[0])):
             if pos[0] == y and pos[1] == x:
@@ -34,155 +31,73 @@ def print_grid_pos(lines, pos):
     print()
 
 
-@aoc_output(title="Day - ")
+def beamfill(lines, direction: str, prev_pos: Tuple[int], history):
+    pos = make_next_pos(prev_pos, direction)
+
+    if (
+        pos[0] < 0 or
+        pos[1] < 0 or
+        pos[0] >= len(lines[0]) or
+        pos[1] >= len(lines)
+    ):
+        # Outside of the grid
+        return None
+    if ((pos, direction) in history):
+        # Already walked this path
+        return None
+
+    current = lines[pos[0]][pos[1]]
+    history.append((pos, direction))
+
+    if current == '.':
+        beamfill(lines, direction, pos, history)
+    elif current == '|':
+        # Check direction
+        if direction in ('N', 'S'):
+            beamfill(lines, direction, pos, history)
+        else:
+            beamfill(lines, 'N', pos, history)
+            beamfill(lines, 'S', pos, history)
+    elif current == '-':
+        # Check direction
+        if direction in ('E', 'W'):
+            beamfill(lines, direction, pos, history)
+        else:
+            beamfill(lines, 'W', pos, history)
+            beamfill(lines, 'E', pos, history)
+            
+    elif current == '/':
+        if direction == 'E':
+            beamfill(lines, 'N', pos, history)
+        elif direction == 'N':
+            beamfill(lines, 'E', pos, history)
+        elif direction == 'W':
+            beamfill(lines, 'S', pos, history)
+        elif direction == 'S':
+            beamfill(lines, 'W', pos, history)
+    elif current == '\\':
+        if direction == 'E':
+            beamfill(lines, 'S', pos, history)
+        elif direction == 'S':
+            beamfill(lines, 'E', pos, history)
+        elif direction == 'W':
+            beamfill(lines, 'N', pos, history)
+        elif direction == 'N':
+            beamfill(lines, 'W', pos, history)
+
+
+def calculate_energize(lines, start, start_dir) -> int:
+    history = []
+    beamfill(lines, start_dir, start, history)
+    return len(set([h[0] for h in history]))
+
+
+@aoc_output(title="Day 16 - Laser Beams")
 def part_1(lines: List[str]) -> int:
-
-    start = (0, -1)
-    history = []
-    paths_to_walk = deque()
-    paths_to_walk.append((start, 'E'))
-    while paths_to_walk:
-        pos, direction = paths_to_walk.pop()
-        while True:
-            pos = make_next_pos(pos, direction)
-            if (
-                pos[0] < 0 or
-                pos[1] < 0 or
-                pos[0] >= len(lines[0]) or
-                pos[1] >= len(lines)
-            ):
-                # Outside of the grid
-                break
-            if ((pos, direction) in history):
-                # Already walked this path
-                break
-            
-            current = lines[pos[0]][pos[1]]
-            # print_grid_pos(lines, pos)
-            history.append((pos, direction))
-            
-            if current == '.':
-                continue
-            elif current == '|':
-                # Check direction
-                if direction in ('N', 'S'):
-                    continue
-                else:
-                    paths_to_walk.append((pos, 'S'))
-                    paths_to_walk.append((pos, 'N'))
-                    break
-            elif current == '-':
-                # Check direction
-                if direction in ('E', 'W'):
-                    continue
-                else:
-                    paths_to_walk.append((pos, 'E'))
-                    paths_to_walk.append((pos, 'W'))
-                    break
-            
-            elif current == '/':
-                if direction == 'E':
-                    # beamfill('N', pos)
-                    direction = 'N'
-                elif direction == 'N':
-                    # beamfill('E', pos)
-                    direction = 'E'
-                elif direction == 'W':
-                    # beamfill('S', pos)
-                    direction = 'S'
-                elif direction == 'S':
-                    # beamfill('W', pos)
-                    direction = 'W'
-            elif current == '\\':
-                if direction == 'E':
-                    # beamfill('S', pos)
-                    direction = 'S'
-                elif direction == 'S':
-                    # beamfill('E', pos)
-                    direction = 'E'
-                elif direction == 'W':
-                    # beamfill('N', pos)
-                    direction = 'N'
-                elif direction == 'N':
-                    # beamfill('W', pos)
-                    direction = 'W'
-    return len(set([h[0] for h in history]))
+    return calculate_energize(lines, (0, -1), 'E')
 
 
-def calculate_energize(lines, start_queue):
-    history = []
-    paths_to_walk = deque()
-    paths_to_walk.append(start_queue)
-    while paths_to_walk:
-        pos, direction = paths_to_walk.pop()
-        while True:
-            pos = make_next_pos(pos, direction)
-            if (
-                pos[0] < 0 or
-                pos[1] < 0 or
-                pos[0] >= len(lines[0]) or
-                pos[1] >= len(lines)
-            ):
-                # Outside of the grid
-                break
-            if ((pos, direction) in history):
-                # Already walked this path
-                break
-            
-            current = lines[pos[0]][pos[1]]
-            # print_grid_pos(lines, pos)
-            history.append((pos, direction))
-            
-            if current == '.':
-                continue
-            elif current == '|':
-                # Check direction
-                if direction in ('N', 'S'):
-                    continue
-                else:
-                    paths_to_walk.append((pos, 'S'))
-                    paths_to_walk.append((pos, 'N'))
-                    break
-            elif current == '-':
-                # Check direction
-                if direction in ('E', 'W'):
-                    continue
-                else:
-                    paths_to_walk.append((pos, 'E'))
-                    paths_to_walk.append((pos, 'W'))
-                    break
-            
-            elif current == '/':
-                if direction == 'E':
-                    # beamfill('N', pos)
-                    direction = 'N'
-                elif direction == 'N':
-                    # beamfill('E', pos)
-                    direction = 'E'
-                elif direction == 'W':
-                    # beamfill('S', pos)
-                    direction = 'S'
-                elif direction == 'S':
-                    # beamfill('W', pos)
-                    direction = 'W'
-            elif current == '\\':
-                if direction == 'E':
-                    # beamfill('S', pos)
-                    direction = 'S'
-                elif direction == 'S':
-                    # beamfill('E', pos)
-                    direction = 'E'
-                elif direction == 'W':
-                    # beamfill('N', pos)
-                    direction = 'N'
-                elif direction == 'N':
-                    # beamfill('W', pos)
-                    direction = 'W'
-
-    return len(set([h[0] for h in history]))
-
-
-@aoc_output(title="Day - ")
+@aoc_output(title="Day 16 - All the beams!")
 def part_2(lines: List[str]) -> int:
     W, H = len(lines[0]), len(lines)
     start_positions = []
@@ -191,25 +106,22 @@ def part_2(lines: List[str]) -> int:
             start_positions.append(
                 (
                     lines,
-                    (
-                        (j, (-1 if i == 0 else W+1)),
-                        ('E' if i == 0 else 'W')
-                    )
+                    (j, (-1 if i == 0 else W)),
+                    ('E' if i == 0 else 'W')
                 )
             )
         for j in range(W):
             start_positions.append(
                 (
                     lines,
-                    (
-                        ((-1 if i == 0 else H+1), j),
-                        ('S' if i == 0 else 'N')
-                    )
+                    ((-1 if i == 0 else H), j),
+                    ('S' if i == 0 else 'N')
                 )
             )
-            
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        result = pool.starmap(calculate_energize, tqdm(start_positions))
+
+    with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
+        result = pool.starmap(calculate_energize, start_positions)
+
     return max(result)
 
 
@@ -217,9 +129,7 @@ if __name__ == "__main__":
     pi = get_puzzle_input(__file__, block=True)
 
     # Part 1
-    # solution_1 = part_1(pi)
-    # submit_solution(__file__, solution=solution_1, part='a')
+    solution_1 = part_1(pi)
 
     # Part 2
     solution_2 = part_2(pi)
-    # submit_solution(__file__, solution=solution_2, part='b')

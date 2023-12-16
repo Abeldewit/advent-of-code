@@ -1,4 +1,3 @@
-from pathlib import Path
 import string
 from collections import defaultdict
 
@@ -11,7 +10,11 @@ def get_part_numbers_sum(lines: list[str]) -> int:
     schema_height = len(lines) - 1
     schema_length = len(lines[0]) - 1
 
-    def _get_nearest_symbols(self_x: int, self_y: int, self_l: int) -> set[str]:
+    def _get_nearest_symbols(
+        self_x: int,
+        self_y: int,
+        self_l: int
+    ) -> set[str]:
         x_0 = max(0, self_x - self_l)
         y_0 = max(0, self_y - 1)
         x_1 = min(schema_length, self_x + 1)

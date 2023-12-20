@@ -16,13 +16,11 @@ def part_2(lines: List[str]) -> int:
 
 if __name__ == "__main__":
     pi = get_puzzle_input(__file__, block=True)
-    
+
     # Part 1
     solution_1 = part_1(pi)
-    if (input('Submit part a (Y/N): ') == 'Y'):
-        submit_solution(__file__, solution=solution_1, part='a')
-    
+    submit_solution(__file__, solution=solution_1, part='a')
+
     # Part 2
     solution_2 = part_2(pi)
-    if (input('Submit part b (Y/N): ') == 'Y'):
-        submit_solution(__file__, solution=solution_2, part='b')
+    submit_solution(__file__, solution=solution_2, part='b')

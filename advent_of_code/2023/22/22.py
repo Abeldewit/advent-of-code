@@ -44,32 +44,27 @@ def apply_gravity(bricks):
     return final_bricks
 
 
-@aoc_output(title="Day - ")
-def part_1(lines: List[str]) -> int:
+@aoc_output(title="Day 22 - Falling blocks")
+def part_1_2(lines: List[str]) -> int:
     bricks = create_bricks(lines)
     fallen_bricks = apply_gravity(bricks)
 
-    can_be_destroyed = 0
+    can_be_destroyed, would_destroy = 0, 0
     for less_one in combinations(fallen_bricks.values(), len(fallen_bricks)-1):
         temp = apply_gravity(less_one)
         can_be_destroyed += all(
             tp.minZ == fallen_bricks[id].minZ for id, tp in temp.items()
         )
-    return can_be_destroyed
-
-
-@aoc_output(title="Day - ")
-def part_2(lines: List[str]) -> int:
-    pass
+        would_destroy += sum(
+            tp.minZ != fallen_bricks[id].minZ for id, tp in temp.items()
+        )
+    return can_be_destroyed, would_destroy
 
 
 if __name__ == "__main__":
     pi = get_puzzle_input(__file__, block=True)
 
-    # Part 1
-    solution_1 = part_1(pi)
+    # Part 1 & 2 in the same function
+    solution_1, solution_2 = part_1_2(pi)
     submit_solution(__file__, solution=solution_1, part='a')
-
-    # Part 2
-    # solution_2 = part_2(pi)
-    # submit_solution(__file__, solution=solution_2, part='b')
+    submit_solution(__file__, solution=solution_2, part='b')

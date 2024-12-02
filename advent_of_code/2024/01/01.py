@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # Part 1
     solution_1 = part_1(pi)
-    # submit_solution(__file__, solution=solution_1, part='a')
+    submit_solution(__file__, solution=solution_1, part='a')
 
     # Part 2
     solution_2 = part_2(pi)

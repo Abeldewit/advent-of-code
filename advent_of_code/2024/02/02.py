@@ -84,7 +84,6 @@ def part_2(lines: List[str]) -> int:
             new_arr = line[:i] + line[i+1:]
             sub_safe = is_safe(new_arr)
             if sub_safe:
-                print(f"{i} - {line[i]} / {new_arr=} {sub_safe}")
                 safe_count+=1
                 break
     return safe_count

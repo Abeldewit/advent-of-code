@@ -1,5 +1,10 @@
 from advent_of_code.decorators import aoc_output
-from advent_of_code.utilities import get_puzzle_input, submit_solution
+from advent_of_code.utilities import (
+    get_puzzle_input,
+    submit_solution,
+    convert_to_numbers,
+    create_array_from_lines,
+)
 
 from typing import List
 

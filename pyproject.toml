@@ -1,11 +1,35 @@
 [tool.poetry]
-name = "advent-of-code"
+name = "advent_of_code"
 version = "0.1.0"
 description = "Solutions to Advent of Code challenges"
 authors = ['Abel de Wit <abeldewit@gmail.com>']
 readme = "README.md"
+packages = [
+    {"include" = "advent_of_code"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 prettytable = "^3.9.0"
 numpy = "1.26.2"
+aocd = "^0.1"
+browser-cookie3 = "^0.19.1"
+
+[tool.poetry.group.lint.dependencies]
+ruff = "^0.6.4"
+isort = "^5.13.2"
+flake8 = "^7.1.1"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"

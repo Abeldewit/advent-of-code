@@ -25,46 +25,6 @@ def is_safe(arr):
     return same_sign and in_bounds
 
 
-def is_safe_removal(arr, removal=False):
-    """Check whether the step changes are always increasing
-    or decreasing
-
-    Args:
-        arr (np.ndarray): The list of numbers to check
-
-    Returns:
-        bool: Whether the record is safe
-    """
-    diff = np.diff(arr)
-    if np.all(np.sign(np.diff(arr)) == np.sign(np.diff(arr))[0]):
-        return True
-    if not removal:
-        return False
-    
-    signs = np.sign(diff)
-    negative_steps = np.where((signs == 0) | (signs == -1))[0]
-    positive_steps = np.where((signs == 0) | (signs == 1))[0]
-    
-    if len(negative_steps) == 1 or len(positive_steps) == 1:
-        return True
-    return False
-
-def within_step_bounds_removal(arr, removal=False):
-    diff = np.abs(np.diff(arr))
-    bounds = np.where((diff >= 1) & (diff <= 3))[0]
-    # All steps are within the allowed bounds
-    if len(bounds) == len(arr)-1:
-        return True
-    if not removal:
-        return False
-    
-    for i in range(len(arr)):
-        temp = list(arr)
-        removed_value = temp.pop(i)
-        if within_step_bounds_removal(temp, removal=False):
-            return True
-    return False
-
 
 @aoc_output(title="Day - ")
 def part_1(lines: List[str]) -> int:

@@ -1,26 +1,27 @@
-[tool.poetry]
+[project]
 name = "advent_of_code"
 version = "0.1.0"
 description = "Solutions to Advent of Code challenges"
-authors = ['Abel de Wit <abeldewit@gmail.com>']
-readme = "README.md"
-packages = [
-    {"include" = "advent_of_code"}
+authors = [
+    {name = "", email = "abeldewit@gmail.com"},
+    {name = "Abel de Wit", email = "abeldewit@gmail.com"},
 ]
+dependencies = [
+    "prettytable>=0.7.2",
+    "aocd>=0.1",
+    "browser-cookie3>=0.20.1",
+    "tqdm>=4.23.3",
+    "numpy>=2.2.6",
+]
+requires-python = "==3.10"
+readme = "README.md"
+license = {text = "MIT"}
 
-[tool.poetry.dependencies]
-python = "^3.10"
-prettytable = "^3.9.0"
-numpy = "1.26.2"
-aocd = "^0.1"
-browser-cookie3 = "^0.19.1"
-tqdm = "^4.67.1"
-
-[tool.poetry.group.lint.dependencies]
-ruff = "^0.6.4"
-isort = "^5.13.2"
-flake8 = "^7.1.1"
-
+[project.optional-dependencies]
+lint = [
+    "ruff>=0.14.7",
+    "isort>=7.0.0",
+]
 [tool.ruff]
 line-length = 88
 target-version = "py310"
@@ -34,3 +35,11 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.build]
+includes = ["advent_of_code"]
+
+

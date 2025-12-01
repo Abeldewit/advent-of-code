@@ -35,7 +35,10 @@ fi
 # Create directory and copy template
 TARGET_DIR="$BASE_DIR/$YEAR/$NUM"
 mkdir -p "$TARGET_DIR"
-cp "solution_template.py" "$TARGET_DIR/$NUM.py"
+sed \
+  -e "s/{YEAR}/$YEAR/g" \
+  -e "s/{DAY}/$NUM/g" \
+  solution_template.py > "$TARGET_DIR/$NUM.py"
 
 # Run the solution script
 python "$TARGET_DIR/$NUM.py"

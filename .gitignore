@@ -161,3 +161,4 @@ cython_debug/
 
 # AoC Policy
 puzzle_input.txt
+.pdm-python

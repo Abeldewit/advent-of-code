@@ -3,10 +3,7 @@ from typing import List
 from aocd.models import Puzzle
 
 from advent_of_code.decorators import aoc_output
-from advent_of_code.utilities import (convert_to_numbers,
-                                      create_array_from_lines,
-                                      get_puzzle_input, get_puzzle_lines,
-                                      submit_solution)
+from advent_of_code.utilities import get_puzzle_lines, submit_solution
 
 PUZZLE = Puzzle(year=2025, day=1)
 
